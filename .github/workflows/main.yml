@@ -1,12 +1,17 @@
 on:
   push:
 
-env:
-  IMAGE: ghcr.io/${{ github.repository }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [docker, podman]
+
+    env:
+      IMAGE: ghcr.io/${{ github.repository }}-${{ matrix.app }}
 
     steps:
       - uses: actions/checkout@v2
@@ -15,8 +20,8 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install podman
 
-      - run: podman build . -t ${{ env.IMAGE }}
+      - run: ${{ matrix.app }} build . -t ${{ env.IMAGE }}
 
-      - run: podman login ghcr.io -u token -p ${{ secrets.WRITE_PACKAGES_TOKEN }}
+      - run: ${{ matrix.app }} login ghcr.io -u token -p ${{ secrets.WRITE_PACKAGES_TOKEN }}
 
-      - run: podman push ${{ env.IMAGE }}
+      - run: ${{ matrix.app }} push ${{ env.IMAGE }}
