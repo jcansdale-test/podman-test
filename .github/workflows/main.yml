@@ -1,6 +1,9 @@
 on:
   push:
 
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,4 +15,6 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install podman
 
-      - run: podman build .
+      - run: podman build . -t ${{ env.IMAGE }}
+
+      - run: podman push ${{ env.IMAGE }}
