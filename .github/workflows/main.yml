@@ -17,6 +17,6 @@ jobs:
 
       - run: podman build . -t ${{ env.IMAGE }}
 
-      - run: podman login ghcr.io -u token -p ${{ github.token }}
+      - run: podman login ghcr.io -u token -p ${{ secrets.WRITE_PACKAGES_TOKEN }}
 
       - run: podman push ${{ env.IMAGE }}
