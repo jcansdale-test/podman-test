@@ -14,11 +14,13 @@ jobs:
       IMAGE: ghcr.io/${{ github.repository }}-${{ matrix.app }}
 
     steps:
-      - uses: actions/checkout@v2
-
       - run: |
           sudo apt-get -y update
           sudo apt-get -y install podman
+
+      - run: |
+          echo 'FROM alpine
+          LABEL org.opencontainers.image.source=https://github.com/${{ github.repository }}' > Dockerfile
 
       - run: ${{ matrix.app }} build . -t ${{ env.IMAGE }}
 
