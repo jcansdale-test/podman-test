@@ -12,4 +12,4 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install podman
 
-      - run: podman
+      - run: podman build .
